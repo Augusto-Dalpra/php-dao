@@ -24,7 +24,7 @@ class Usuario {
         return $this->desenha;
     }
     public function setDesenha($value){
-        $this->idusuario = $value;
+        $this->desenha = $value;
     }
     public function getDtcadastro(){
         return $this->dtcadastro;
@@ -49,6 +49,40 @@ class Usuario {
             $this->setDesenha($row["desenha"]);
             $this->setDtcadastro(new DateTime($row["dtcadastro"]));
         }
+    }
+
+        public static function getList(){
+            $sql = new Sql();
+            return $sql ->select("SELECT * FROM tb_usuarios order by  deslogin;");
+
+
+
+        }
+        public  static function search($login){
+        $sql = new Sql();
+        return $sql->select("SELECT *FROM tb_usuarios WHERE deslogin Like :SEARCH order by deslogin", array(
+            ':SEARCH'=>"%".$login."%"
+        ));
+    }
+    public function login($login,$password){
+        $sql = new Sql();
+        $results=$sql->select("SELECT *FROM tb_usuarios WHERE deslogin = :LOGIN AND desenha = :PASSWORD",array(
+
+            ":LOGIN"=>$login,
+            ":PASSWORD" =>$password
+        ));
+        if (count($results)>0){
+            $row = $results[0];
+            $this->setIdusuario($row["idusuario"]);
+            $this->setDeslogin($row["deslogin"]);
+            $this->setDesenha($row["desenha"]);
+            $this->setDtcadastro(new DateTime($row["dtcadastro"]));
+        }else{
+
+            throw new Exception ("login e/ou senha invalido"); 
+
+        }
+
     }
 
 public function __toString(){
