@@ -95,6 +95,18 @@ class Usuario {
             ':ID' => $this->getIdusuario()
         ));
     }
+    public function delete(){
+        $sql = new Sql();
+        $sql->execute("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
+            ':ID' => $this->getIdusuario()
+        ));
+        
+        // Define as propriedades para os valores desejados após a exclusão
+        $this->setIdusuario(0);
+        $this->setDeslogin("");
+        $this->setDesenha("");
+        $this->setDtcadastro(new DateTime());
+    }
 
 
     public function __construct($login = "", $password = "") {
@@ -112,15 +124,17 @@ class Usuario {
         
    
 
-    public function __toString(){
-    return json_encode(array(
-        "idusuario"=>$this ->getIdusuario(),
-        "deslogin" =>$this ->getDeslogin(),
-        "desenha" =>$this -> getDtcadastro(),
-        "dtcadastro"=>$this ->getDtcadastro()->format("d/m/y H:i:s")
-    ));
+    public function __toString() {
+        return json_encode(array(
+            "idusuario" => $this->getIdusuario(),
+            "deslogin" => $this->getDeslogin(),
+            "desenha" => $this->getDesenha(),
+            "dtcadastro" => $this->getDtcadastro() ? $this->getDtcadastro()->format("d/m/y H:i:s") : null // Formata a data se estiver definida, caso contrário, retorna null
+        ));
+    }
 }
-}
+
+
 
 
 
